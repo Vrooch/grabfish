@@ -1,8 +1,6 @@
 // [EXTRA] Scanner e uma classe pronta do Java usada para ler o teclado.
-import java.util.Scanner;
-
-// [EXTRA] Random e uma classe pronta do Java usada para gerar numeros aleatorios.
 import java.util.Random;
+import java.util.Scanner;
 
 public class JogoPesca {
 
@@ -16,6 +14,8 @@ public class JogoPesca {
         // Criacao de um objeto da classe Jogador usando o construtor.
         Jogador jogador = new Jogador("Pescador");
 
+        Vara vara = new Vara();
+
         int opcao = 0;
 
         System.out.println("============================");
@@ -25,12 +25,13 @@ public class JogoPesca {
         // [EXTRA] while repete o jogo ate o usuario escolher sair.
         while (opcao != 4) {
 
+            System.out.println("\n------ STATUS ------");
             jogador.mostrarStatus();
+            vara.Status();
 
-            System.out.println();
-            System.out.println("1 - Pescar");
-            System.out.println("2 - Evoluir vara");
-            System.out.println("3 - Consertar vara");
+            System.out.println("\n1 - Pescar");
+            System.out.println("2 - Evoluir vara | R$" + vara.GetCustoEvoluir());
+            System.out.println("3 - Consertar vara | R$" + vara.GetCustoConserto());
             System.out.println("4 - Sair");
             System.out.print("Escolha: ");
 
@@ -41,7 +42,7 @@ public class JogoPesca {
 
                 case 1:
                     // [EXTRA] if verifica se a vara ainda pode ser usada.
-                    if (jogador.durabilidadeVara <= 0) {
+                    if (vara.GetDurabilidade() <= 0) {
                         System.out.println("Sua vara esta quebrada. Conserte primeiro!");
                         break;
                     }
@@ -60,50 +61,38 @@ public class JogoPesca {
                         peixe = new Peixe("Marlin", "Lendario", 600);
                     }
 
-                    // Double/double: aumenta o valor do peixe conforme o nivel da vara.
-                    double multiplicador = 1.0 + (jogador.nivelVara * 0.10);
-
-                    // [EXTRA] (int) transforma o resultado double em int.
-                    int valorFinal = (int) (peixe.valor * multiplicador);
+                    // Mutiplicar o valor do peixe pelo valor nivel da vara
+                    int valorFinal = (int) (peixe.valor * (1.0 + (vara.GetNivel() * 0.10)));
 
                     jogador.receberDinheiro(valorFinal);
+                    vara.Desgastar();
 
-                    int desgaste = random.nextInt(5) + 3;
-                    jogador.desgastarVara(desgaste);
-
-                    System.out.println();
-                    System.out.println("Voce pescou!");
-                    peixe.mostrarDados();
+                    System.out.println("\nVoce pescou!\n");
                     System.out.println("Valor recebido: R$ " + valorFinal);
-                    System.out.println("Desgaste da vara: " + desgaste);
                     break;
 
                 case 2:
-                    int custoEvoluir = 150 * jogador.nivelVara;
-
-                    if (jogador.dinheiro >= custoEvoluir) {
-                        jogador.dinheiro = jogador.dinheiro - custoEvoluir;
-                        jogador.evoluirVara();
+                    if (jogador.dinheiro >= vara.GetCustoEvoluir()) {
+                        jogador.dinheiro = jogador.dinheiro - vara.GetCustoEvoluir();
+                        vara.Evoluir();
 
                         System.out.println("Vara evoluida!");
-                        System.out.println("Novo nivel: " + jogador.nivelVara);
+                        System.out.println("Novo nivel: " + vara.GetNivel());
                     } else {
                         System.out.println("Dinheiro insuficiente.");
-                        System.out.println("Custo: R$ " + custoEvoluir);
+                        System.out.println("Custo: R$ " + vara.GetCustoEvoluir());
                     }
                     break;
 
                 case 3:
-                    int custoConserto = 40 * jogador.nivelVara;
-
-                    if (jogador.dinheiro >= custoConserto) {
-                        jogador.dinheiro = jogador.dinheiro - custoConserto;
-                        jogador.consertarVara();
+                    if (jogador.dinheiro >= vara.GetCustoConserto()) {
+                        jogador.dinheiro = jogador.dinheiro - vara.GetCustoConserto();
+                        vara.Consertar();
 
                         System.out.println("Vara consertada!");
                     } else {
                         System.out.println("Dinheiro insuficiente.");
-                        System.out.println("Custo: R$ " + custoConserto);
+                        System.out.println("Custo: R$ " + vara.GetCustoConserto());
                     }
                     break;
 
