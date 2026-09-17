@@ -48,18 +48,7 @@ public class JogoPesca {
                     }
 
                     int sorteio = random.nextInt(100) + 1;
-                    Peixe peixe;
-
-                    // O sorteio define qual objeto Peixe sera criado.
-                    if (sorteio <= 70) {
-                        peixe = new Peixe("Tilapia", "Comum", 10);
-                    } else if (sorteio <= 90) {
-                        peixe = new Peixe("Dourado", "Raro", 40);
-                    } else if (sorteio <= 98) {
-                        peixe = new Peixe("Atum", "Epico", 150);
-                    } else {
-                        peixe = new Peixe("Marlin", "Lendario", 600);
-                    }
+                    Peixe peixe = Peixe.CreatPeixe();
 
                     // Mutiplicar o valor do peixe pelo valor nivel da vara
                     int valorFinal = (int) (peixe.valor * (1.0 + (vara.GetNivel() * 0.10)));
